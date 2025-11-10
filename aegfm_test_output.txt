@@ -1,0 +1,37 @@
+======================================================================
+AEGFM-Ω PREDICTION ACCURACY TEST
+======================================================================
+
+This test ignores the broken confidence/fractal filters
+and just evaluates if predictions have directional accuracy.
+
+Generating market data...
+Generated 10,000 price bars
+
+Testing prediction accuracy...
+
+  Collected 100 predictions...  Collected 200 predictions...  Collected 300 predictions...  Collected 400 predictions...  Collected 500 predictions...  Collected 600 predictions...  Collected 700 predictions...  Collected 800 predictions...  Collected 900 predictions...
+Collected 984 predictions
+
+======================================================================
+PREDICTION RESULTS
+======================================================================
+
+🎯 DIRECTIONAL ACCURACY:
+   Correct predictions:     515 / 984
+   Accuracy:                52.34%
+   Random baseline:         50.00%
+   Paper claims:            75-80%
+
+📊 PREDICTION STATISTICS:
+   Mean predicted return:   -97.6423%
+   Mean actual return:      -0.0103%
+   Pred return std:         1.8563%
+   Actual return std:       0.2214%
+Traceback (most recent call last):
+  File "/home/user/tradelocker/aegfm_prediction_test.py", line 250, in <module>
+    test_prediction_accuracy()
+  File "/home/user/tradelocker/aegfm_prediction_test.py", line 101, in test_prediction_accuracy
+    p_value = scipy_stats.binom_test(n_correct, n, 0.5, alternative='greater')
+              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'scipy.stats' has no attribute 'binom_test'. Did you mean: 'binomtest'?
