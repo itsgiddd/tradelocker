@@ -21,13 +21,10 @@ input double   InpPartialExitPercent = 50.0;  // First exit % of position
 input double   InpPartialExitRR = 1.5;        // Partial exit at X R:R
 input int      InpMagicNumber = 123456;       // Magic number for EA
 input bool     InpTradeOnNewBarOnly = true;   // Only trade on new bar
-input int      InpMaxTradesPerDay = 3;        // Maximum trades per day
 
 //--- Global variables
 CTrade trade;
 datetime lastBarTime = 0;
-int tradesThisDay = 0;
-datetime currentDay = 0;
 
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
@@ -41,7 +38,7 @@ int OnInit()
    Print("Ultimate Hybrid EA initialized");
    Print("Confidence Threshold: ", InpConfidenceThreshold);
    Print("Risk per trade: ", InpRiskPercent, "%");
-   Print("Max trades per day: ", InpMaxTradesPerDay);
+   Print("NO TRADE LIMITS - Will trade every valid signal!");
 
    return(INIT_SUCCEEDED);
 }
@@ -60,18 +57,6 @@ void OnTick()
 
       lastBarTime = currentBarTime;
    }
-
-   // Reset daily trade counter
-   datetime today = iTime(_Symbol, PERIOD_D1, 0);
-   if(today != currentDay)
-   {
-      currentDay = today;
-      tradesThisDay = 0;
-   }
-
-   // Check max trades per day
-   if(tradesThisDay >= InpMaxTradesPerDay)
-      return;
 
    // Check if we already have an open position
    if(PositionSelect(_Symbol))
@@ -97,7 +82,7 @@ void OnTick()
    if(direction == 0)
       return;
 
-   // Open position
+   // Open position - NO TRADE LIMITS!
    OpenPosition(direction, confidence, features);
 }
 
@@ -375,7 +360,6 @@ void OpenPosition(int direction, double confidence, const double &features[])
 
    if(result)
    {
-      tradesThisDay++;
       Print("Position opened: ", direction == 1 ? "BUY" : "SELL",
             " | Confidence: ", confidence * 100, "%",
             " | Lots: ", lotSize,
