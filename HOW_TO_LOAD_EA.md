@@ -121,14 +121,15 @@ Partial Exit Percent:      50.0        ← Exit 50% at 1.5R
 Partial Exit R:R:          1.5         ← First exit at 1.5R
 Magic Number:              123456      ← Unique ID (leave as is)
 Trade On New Bar Only:     true        ← Wait for bar close
-Max Trades Per Day:        3           ← Don't overtrade
 ```
 
 **Recommended Settings for Demo Testing:**
 - **Confidence Threshold:** `0.75` (75%)
 - **Risk Percent:** `2.0` (2%)
 - **Use Auto Lot:** `true`
-- **Max Trades Per Day:** `3`
+
+**IMPORTANT: NO TRADE LIMITS!**
+The EA will trade EVERY signal that meets the confidence threshold. There are no daily limits or artificial restrictions - just pure signal-based trading.
 
 ### **Common Tab**:
 
@@ -268,8 +269,8 @@ On your chart (top-right corner):
 UltimateHybridEA
 Balance: $10,000.00
 Confidence: 75%
-Trades Today: 1/3
 Last Signal: BUY at 1.1234 (80% confidence)
+NO TRADE LIMITS - Trading all valid signals!
 ```
 
 ---
