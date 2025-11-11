@@ -75,13 +75,12 @@ class AutoTradingSimulator:
     """
 
     def __init__(self, starting_balance=10000, risk_percent=2.0,
-                 confidence_threshold=0.75, max_trades_per_day=3):
+                 confidence_threshold=0.75):
         self.starting_balance = starting_balance
         self.balance = starting_balance
         self.equity = starting_balance
         self.risk_percent = risk_percent
         self.confidence_threshold = confidence_threshold
-        self.max_trades_per_day = max_trades_per_day
 
         # Trading system
         self.system = ProductionTradingSystem()
@@ -94,8 +93,6 @@ class AutoTradingSimulator:
 
         # State
         self.open_position = None
-        self.trades_today = 0
-        self.current_day = None
 
     def run_backtest(self, data):
         """
@@ -113,7 +110,7 @@ class AutoTradingSimulator:
         print(f"\nStarting Balance: ${self.starting_balance:,.2f}")
         print(f"Risk per Trade: {self.risk_percent}%")
         print(f"Confidence Threshold: {self.confidence_threshold:.0%}")
-        print(f"Max Trades/Day: {self.max_trades_per_day}")
+        print(f"Trade Limits: NONE - Will trade EVERY valid signal!")
         print(f"\nSimulation Period: {dates[0]} to {dates[-1]}")
         print(f"Total Bars: {len(closes):,}")
         print("\n" + "="*80)
@@ -132,11 +129,6 @@ class AutoTradingSimulator:
         for i in range(train_end, len(closes)):
             current_date = dates[i]
 
-            # Reset daily counter
-            if self.current_day != current_date.date():
-                self.current_day = current_date.date()
-                self.trades_today = 0
-
             # Update equity curve
             if self.open_position:
                 self.equity = self.balance + self.calculate_floating_pnl(
@@ -154,11 +146,7 @@ class AutoTradingSimulator:
                 self.manage_position(i, highs, lows, closes)
                 continue
 
-            # Check if can open new position
-            if self.trades_today >= self.max_trades_per_day:
-                continue
-
-            # Look for signal
+            # Look for signal (NO TRADE LIMITS!)
             hist_closes = closes[:i]
             hist_highs = highs[:i]
             hist_lows = lows[:i]
@@ -206,8 +194,6 @@ class AutoTradingSimulator:
             'risk_amount': risk_amount,
             'partial_exit_done': False
         }
-
-        self.trades_today += 1
 
         print(f"\n{'='*60}")
         print(f"TRADE #{len(self.trades) + 1} OPENED")
@@ -507,8 +493,7 @@ def main():
     simulator = AutoTradingSimulator(
         starting_balance=10000,
         risk_percent=2.0,
-        confidence_threshold=0.75,
-        max_trades_per_day=3
+        confidence_threshold=0.75
     )
 
     # Run backtest
